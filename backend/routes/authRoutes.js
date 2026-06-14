@@ -5,17 +5,18 @@ const User = require("../models/User");
 
 const router = express.Router();
 
+// REGISTER
 router.post("/register", async (req, res) => {
-
   try {
-
     const { name, email, password } = req.body;
+
+    console.log("Register Request:", req.body);
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({
-        message: "User already exists"
+        message: "User already exists",
       });
     }
 
@@ -24,32 +25,36 @@ router.post("/register", async (req, res) => {
     const user = await User.create({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
     });
 
     res.status(201).json({
-      message: "User registered successfully"
+      message: "User registered successfully",
+      userId: user._id,
     });
 
   } catch (error) {
+    console.error("REGISTER ERROR:", error);
 
-    res.status(500).json(error);
-
+    res.status(500).json({
+      message: error.message,
+      error: error,
+    });
   }
-
 });
 
+// LOGIN
 router.post("/login", async (req, res) => {
-
   try {
-
     const { email, password } = req.body;
+
+    console.log("Login Request:", email);
 
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({
-        message: "Invalid credentials"
+        message: "Invalid credentials",
       });
     }
 
@@ -60,30 +65,37 @@ router.post("/login", async (req, res) => {
 
     if (!match) {
       return res.status(400).json({
-        message: "Invalid credentials"
+        message: "Invalid credentials",
       });
     }
 
     const token = jwt.sign(
       {
-        id: user._id
+        id: user._id,
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "7d"
+        expiresIn: "7d",
       }
     );
 
-    res.json({
-      token
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
 
   } catch (error) {
+    console.error("LOGIN ERROR:", error);
 
-    res.status(500).json(error);
-
+    res.status(500).json({
+      message: error.message,
+      error: error,
+    });
   }
-
 });
 
 module.exports = router;
