@@ -1,3 +1,4 @@
+import ExpenseChart from "../components/ExpenseChart";
 import { useState, useEffect } from "react";
 import { FaTrash, FaEdit, FaSignOutAlt } from "react-icons/fa";
 import API from "../services/api";
@@ -180,6 +181,7 @@ function Dashboard() {
         }}
       >
         <h2>Total Expenses</h2>
+        <ExpenseChart expenses={expenses} />
         <h1>₹ {totalExpense}</h1>
       </div>
 
