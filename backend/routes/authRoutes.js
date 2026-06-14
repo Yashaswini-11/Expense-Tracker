@@ -34,11 +34,11 @@ router.post("/register", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("REGISTER ERROR:", error);
+    console.log("REGISTER ERROR:");
+    console.log(error);
 
     res.status(500).json({
       message: error.message,
-      error: error,
     });
   }
 });
@@ -89,11 +89,11 @@ router.post("/login", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("LOGIN ERROR:", error);
+    console.log("LOGIN ERROR:");
+    console.log(error);
 
     res.status(500).json({
       message: error.message,
-      error: error,
     });
   }
 });
